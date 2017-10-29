@@ -91,7 +91,7 @@ public:
                const std::string &pattern,
                const std::map<std::string, std::set<std::string>> &match) noexcept;
 
-  inline bool connected() const { return !_path.empty(); }
+  inline bool connected() const { return !_path.empty(); }      //empty가 false일때 return true 
 
   int         device_index() const;
 
@@ -140,9 +140,9 @@ public:
 
   static constexpr char ev3_touch[]      = "lego-ev3-touch";
   static constexpr char ev3_color[]      = "lego-ev3-color";
-  static constexpr char ev3_ultrasonic[] = "lego-ev3-us";
-  static constexpr char ev3_gyro[]       = "lego-ev3-gyro";
-  static constexpr char ev3_infrared[]   = "lego-ev3-ir";
+  static constexpr char ev3_ultrasonic[] = "lego-ev3-us";         // 초음파
+  static constexpr char ev3_gyro[]       = "lego-ev3-gyro";       // 자세나 위치 추정
+  static constexpr char ev3_infrared[]   = "lego-ev3-ir";         // 적외선
 
   static constexpr char nxt_touch[]      = "lego-nxt-touch";
   static constexpr char nxt_light[]      = "lego-nxt-light";
@@ -151,8 +151,8 @@ public:
   static constexpr char nxt_i2c_sensor[] = "nxt-i2c-sensor";
   static constexpr char nxt_analog[]     = "nxt-analog";
 
-  sensor(address_type);
-  sensor(address_type, const std::set<sensor_type>&);
+  sensor(address_type);                                   //overriding constructor
+  sensor(address_type, const std::set<sensor_type>&);     //overriding constructor
 
   using device::connected;
   using device::device_index;
@@ -218,9 +218,9 @@ public:
   mode_set commands() const { return get_attr_set("commands"); }
 
   // Decimals: read-only
-  // Returns the number of decimal places for the values in the `value<N>`
+  // Returns the number of decimal places for the values in the `value<N>`          // value<N> 소수 자릿수
   // attributes of the current mode.
-  int decimals() const { return get_attr_int("decimals"); }
+  int decimals() const { return get_attr_int("decimals"); }       
 
   // Driver Name: read-only
   // Returns the name of the sensor device/driver. See the list of [supported
@@ -1223,11 +1223,11 @@ public:
   static constexpr char command_float[] = "float";
 
   // With `normal` polarity, a positive duty cycle will
-  // cause the motor to rotate clockwise.
+  // cause the motor to rotate clockwise.                     // positive --> 시계방향으로 모터 돌아감
   static constexpr char polarity_normal[] = "normal";
 
   // With `inversed` polarity, a positive duty cycle will
-  // cause the motor to rotate counter-clockwise.
+  // cause the motor to rotate counter-clockwise.             // positive --> 시계 반대 방향으로 모터 돌아감
   static constexpr char polarity_inversed[] = "inversed";
 
 
@@ -1400,7 +1400,7 @@ public:
   }
 
   // Delay On: read/write
-  // The `timer` trigger will periodically change the LED brightness between
+  // The `timer` trigger will periodically change the LED brightness between        * time trigger : executes one or more sets of tasks according to a pre-determined task schedule.
   // 0 and the current brightness setting. The `on` time can
   // be specified via `delay_on` attribute in milliseconds.
   int delay_on() const { return get_attr_int("delay_on"); }
@@ -1448,8 +1448,8 @@ public:
     static led blue_led1;
     static led blue_led2;
 
-    static std::vector<led*> led1;
-    static std::vector<led*> led2;
+    static std::vector<led*> led1;              // empty container
+    static std::vector<led*> led2;              
 
     static std::vector<float> black;
     static std::vector<float> blue;
@@ -1469,7 +1469,7 @@ public:
     static std::vector<float> black;
     static std::vector<float> red;
     static std::vector<float> green;
-    static std::vector<float> amber;
+    static std::vector<float> amber;      // 호박
     static std::vector<float> orange;
     static std::vector<float> yellow;
 
@@ -1479,7 +1479,7 @@ public:
   // Assigns to each led in `group` corresponding brightness percentage from `color`.
   static void set_color(const std::vector<led*> &group, const std::vector<float> &color);
 
-  static void all_off();
+  static void all_off();          // disable?
 
 protected:
   int _max_brightness = 0;
@@ -1496,14 +1496,14 @@ protected:
 class power_supply : protected device
 {
 public:
-  power_supply(std::string name);
+  power_supply(std::string name);       // constructor empty일 경우 "legoev3-battery"로 ..
 
   using device::connected;
 
 //~autogen generic-get-set classes.powerSupply>currentClass
 
   // Measured Current: read-only
-  // The measured current that the battery is supplying (in microamps)
+  // The measured current that the battery is supplying (in microamps) 배터리가 공급하는 전류
   int measured_current() const { return get_attr_int("current_now"); }
 
   // Measured Voltage: read-only
@@ -1534,7 +1534,7 @@ public:
 //-----------------------------------------------------------------------------
 
 // EV3 buttons
-class button
+class button                    // example code  참고
 {
 public:
   button(int bit);
@@ -1581,7 +1581,7 @@ private:
 //-----------------------------------------------------------------------------
 
 // EV3 Sound
-class sound
+class sound         //sound-test 참고
 {
 public:
   static void beep(const std::string &args = "", bool bSynchronous = false);
