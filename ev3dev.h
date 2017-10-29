@@ -408,7 +408,7 @@ public:
 //~autogen special-sensor-declaration specialSensorTypes.ultrasonicSensor>currentClass
 
 // LEGO EV3 ultrasonic sensor.
-class ultrasonic_sensor : public sensor
+class ultrasonic_sensor : public sensor         // 초음파
 {
 public:
   ultrasonic_sensor(address_type address = INPUT_AUTO);
@@ -508,7 +508,7 @@ public:
 //~autogen special-sensor-declaration specialSensorTypes.infraredSensor>currentClass
 
 // LEGO EV3 infrared sensor.
-class infrared_sensor : public sensor
+class infrared_sensor : public sensor       // 적외선 센서
 {
 public:
   infrared_sensor(address_type address = INPUT_AUTO);
@@ -1041,11 +1041,11 @@ public:
   // Run the motor until another command is sent.
   static constexpr char command_run_forever[] = "run-forever";
 
-  // Run the motor for the amount of time specified in `time_sp`
+  // Run the motor for the amount of time specified in `time_sp`    시간으로 정해줌
   // and then stop the motor using the action specified by `stop_action`.
   static constexpr char command_run_timed[] = "run-timed";
 
-  // Run the motor at the duty cycle specified by `duty_cycle_sp`.
+  // Run the motor at the duty cycle specified by `duty_cycle_sp`.  사이클로 정해줌
   // Unlike other run commands, changing `duty_cycle_sp` while running *will*
   // take effect immediately.
   static constexpr char command_run_direct[] = "run-direct";
@@ -1178,11 +1178,11 @@ public:
     // Run the motor until another command is sent.
     void run_forever() { set_command("run-forever"); }
 
-    // Run the motor for the amount of time specified in `time_sp`
+    // Run the motor for the amount of time specified in `time_sp`      
     // and then stop the motor using the action specified by `stop_action`.
     void run_timed() { set_command("run-timed"); }
 
-    // Run the motor at the duty cycle specified by `duty_cycle_sp`.
+    // Run the motor at the duty cycle specified by `duty_cycle_sp`.    
     // Unlike other run commands, changing `duty_cycle_sp` while running *will*
     // take effect immediately.
     void run_direct() { set_command("run-direct"); }
