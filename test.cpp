@@ -6,8 +6,9 @@ class Crain : public CraneCrane
 {
 private:
     ev3dev::touch_sensor touch_q;
-    ev3dev::color_sensor color_q;                //black 감지할 때 물건 감지
-    ev3dev::infrared_sensor infrared_q;          //거리가 달라졌을 때 물건 감지
+    ev3dev::color_sensor color_q;               //black 감지할 때 물건 감지
+    ev3dev::infrared_sensor infrared_q;         //거리가 달라졌을 때 물건 감지
+    ev3dev::sound_sensor sound_q;               // 소리 재생
     ev3dev::motor a;
     ev3dev::motor b; 
     ev3dev::motor c;
