@@ -6,7 +6,7 @@ class Crain : public CraneCrane
 {
 private:
     //ev3dev::color_sensor color_q;               //  black 감지할 때 물건 감지
-    ev3dev::infrared_sensor infrared_q;             //  거리가 달라졌을 때 물건 감지
+    ev3dev::infrared_sensor ultrasonic_q;             //  거리가 달라졌을 때 물건 감지
     //ev3dev::sound_sensor sound_q;               //  소리 재생 sound-test.cpp 참고
     ev3dev::motor a;
     ev3dev::motor b; 
@@ -14,7 +14,7 @@ private:
     
 public:
     // Hardware Configuration
-    Crain():m_speed(0), infrared_q(ev3dev::INPUT_2),a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A)
+    Crain():m_speed(0), ultrasonic_q(ev3dev::INPUT_2),a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A)
     {
         
     }
@@ -96,6 +96,7 @@ public:
     }
 public:
     void example_code();
+    void test_code();
 };
 
 
@@ -149,9 +150,9 @@ void Crain::example_code()
 
 void Crain::test_code()
 {
-        int v = 100;
-        set_speed_i (int v); 
-        float dis =  infrared_q.distance_centimeters();
+        // int v = 100;
+        // set_speed_i (int v); 
+        float dis =  ultrasonic_q.distance_centimeters();
         float n;
         int v[3];
         int neck_pos = a.position_sp();
@@ -164,7 +165,7 @@ void Crain::test_code()
             b.set_speed_sp(-1* get_speed());
             b.run_forever();
             
-            n = infrared_q.distance_centimeters();      
+            n = ultrasonic_q.distance_centimeters();      
                 
             if(n < dis){                            // if 물체를 감지하면
                 v[i] = b.position_sp();
@@ -180,17 +181,21 @@ void Crain::test_code()
         }
             
         
-        // while문으로(i = 3,2,1)
+        // while문으로(i = 2,1,0)
         for(int i = 2; i >= 0 ; i--)
         {
         // i번째 위치로
-            b.run_to_abs_pos(v[i]);
-            b.set_stop_action()
+            b.set_speed_sp(get_speed());
+            b.set_position_sp(v[i]);
+        //    b.run_to_abs_pos();
+            b.set_stop_action("hold");
         
         // 목내리기
             a.set_down(true);
             a.set_speed_sp(get_speed());
-            a.run_to_abs_pos(?);    //값지정해주기
+            a.set_position_sp(?);    
+            //a.run_to_abs_pos();    //값지정해주기
+            a.set_stop_action("hold");
         
         // 집게 벌려서 잡기
         // motor class 
@@ -198,27 +203,34 @@ void Crain::test_code()
         // set_duty_cycle_sp(int v) or set_time_sp(int v)
         // c.set_command("");       //time or duty cycle
         // c.set_polarity("normal or inversed");
-        //
+        // b.set_stop_action("hold");
         
         // 목 올리기
             a.set_down(true);
             a.set_speed_sp(-1*get_speed());
-            a.run_to_abs_pos(neck_pos);    
+            a.set_position_sp(neck_pos);
+            //a.run_to_abs_pos(neck_pos);  
+            a.set_stop_action("hold");
         
         // End  위치로
             b.run_to_abs_pos(660);
+            b.set_stop_action("hold");
         
         // 목 내리기
             a.set_down(true);
             a.set_speed_sp(get_speed());
+            a.set_position_sp(?);
             a.run_to_abs_pos(?);    //값지정해주기
+            a.set_stop_action("hold");
         
         // 집게 벌려서 내려놓기
         
         // 목 올리기
             a.set_down(true);
             a.set_speed_sp(-1*get_speed());
-            a.run_to_abs_pos(neck_pos); 
+            a.set_position_sp(neck_pos);
+            //a.run_to_abs_pos(neck_pos); 
+            a.set_stop_action("hold");
         }
     
     
