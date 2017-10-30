@@ -175,8 +175,9 @@ void Crain::test_code()
             if(b.position_sp() == 660){             // End 위치까지 갔을 때
                 if(i == 2)
                     break;
-                else   
-                    b.run_to_abs_pos(0);            // 시작 위치로
+                else{   
+                    i = 0;
+                    b.run_to_abs_pos(0);}          // 시작 위치로
             }  
         }
             
