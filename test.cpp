@@ -5,17 +5,16 @@
 class Crain : public CraneCrane
 {
 private:
-    ev3dev::touch_sensor touch_q;
-    ev3dev::color_sensor color_q;               //black 감지할 때 물건 감지
-    ev3dev::infrared_sensor infrared_q;         //거리가 달라졌을 때 물건 감지
-    ev3dev::sound_sensor sound_q;               // 소리 재생 sound-test.cpp 참고
+    //ev3dev::color_sensor color_q;               //  black 감지할 때 물건 감지
+    ev3dev::infrared_sensor infrared_q;             //  거리가 달라졌을 때 물건 감지
+    //ev3dev::sound_sensor sound_q;               //  소리 재생 sound-test.cpp 참고
     ev3dev::motor a;
     ev3dev::motor b; 
     ev3dev::motor c;
     
 public:
     // Hardware Configuration
-    Crain():m_speed(0), touch_q(ev3dev::INPUT_2),a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A)
+    Crain():m_speed(0), infrared_q(ev3dev::INPUT_2),a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A)
     {
         
     }
@@ -147,16 +146,94 @@ void Crain::example_code()
 }
 
 
+
+void Crain::test_code()
+{
+        int v = 100;
+        set_speed_i (int v); 
+        float dis =  infrared_q.distance_centimeters();
+        float n;
+        int v[3];
+        int neck_pos = a.position_sp();
+        
+        // scan
+        while(1)
+        {
+            b.set_right(true);
+            b.set_speed_sp(-1* get_speed());
+            //b.run_forever();
+            
+            n = infrared_q.distance_centimeters();
+                
+            if(n < dis){
+                v[i] = b.position_sp();
+                i++;
+            }
+                
+            if(b.position_sp() == 660){
+                if(i == 2)
+                    break;
+                else   
+                    b.run_to_abs_pos(0);
+            }  // 시작위치로
+        }
+            
+        
+        // while문으로(i = 3,2,1)
+        for(int i = 2; i >= 0 ; i--)
+        {
+        // i번째 위치로
+        b.run_to_abs_pos(v[i]);
+        
+        // 목내리기
+        a.set_down(true);
+        a.set_speed_sp(get_speed());
+        a.run_to_abs_pos(?);    //값지정해주기
+        
+        // 집게 벌려서 잡기
+        //motor class 
+        //c.set_command("")
+        
+        // 목 올리기
+        a.set_down(true);
+        a.set_speed_sp(get_speed());
+        a.run_to_abs_pos(neck_pos);    
+        
+        // End  위치로
+        b.run_to_abs_pos(660);
+        
+        // 목 내리기
+        a.set_down(true);
+        a.set_speed_sp(get_speed());
+        a.run_to_abs_pos(?);    //값지정해주기
+        
+        // 집게 벌려서 내려놓기
+        
+        // 목 올리기
+        a.set_down(true);
+        a.set_speed_sp(get_speed());
+        a.run_to_abs_pos(neck_pos); 
+        }
+    
+    
+        //Finish
+            
+        }
+    }
+}
+
+
+
 int main()
 {     
     Crain crain;
     
     if(crain.get_touch_pressed()==true)
     {
-        while(1){
         
-            
-        }
+            Crain.test_code();
+    
+        
     }
     
 }
