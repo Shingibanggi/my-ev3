@@ -10,7 +10,7 @@ private:
     //ev3dev::sound_sensor sound_q;               //  소리 재생 sound-test.cpp 참고
     ev3dev::motor a;
     ev3dev::motor b; 
-    ev3dev::motor c;
+    ev3dev::dc_motor c;
     
 public:
     // Hardware Configuration
@@ -155,27 +155,28 @@ void Crain::test_code()
         float n;
         int v[3];
         int neck_pos = a.position_sp();
+        std::string hold = "hold";
         
         // scan
         while(1)
         {
             b.set_right(true);
             b.set_speed_sp(-1* get_speed());
-            //b.run_forever();
+            b.run_forever();
             
-            n = infrared_q.distance_centimeters();
+            n = infrared_q.distance_centimeters();      
                 
-            if(n < dis){
+            if(n < dis){                            // if 물체를 감지하면
                 v[i] = b.position_sp();
                 i++;
             }
                 
-            if(b.position_sp() == 660){
+            if(b.position_sp() == 660){             // End 위치까지 갔을 때
                 if(i == 2)
                     break;
                 else   
-                    b.run_to_abs_pos(0);
-            }  // 시작위치로
+                    b.run_to_abs_pos(0);            // 시작 위치로
+            }  
         }
             
         
@@ -183,36 +184,41 @@ void Crain::test_code()
         for(int i = 2; i >= 0 ; i--)
         {
         // i번째 위치로
-        b.run_to_abs_pos(v[i]);
+            b.run_to_abs_pos(v[i]);
+            b.set_stop_action()
         
         // 목내리기
-        a.set_down(true);
-        a.set_speed_sp(get_speed());
-        a.run_to_abs_pos(?);    //값지정해주기
+            a.set_down(true);
+            a.set_speed_sp(get_speed());
+            a.run_to_abs_pos(?);    //값지정해주기
         
         // 집게 벌려서 잡기
-        //motor class 
-        //c.set_command("")
+        // motor class 
+        
+        // set_duty_cycle_sp(int v) or set_time_sp(int v)
+        // c.set_command("");       //time or duty cycle
+        // c.set_polarity("normal or inversed");
+        //
         
         // 목 올리기
-        a.set_down(true);
-        a.set_speed_sp(get_speed());
-        a.run_to_abs_pos(neck_pos);    
+            a.set_down(true);
+            a.set_speed_sp(-1*get_speed());
+            a.run_to_abs_pos(neck_pos);    
         
         // End  위치로
-        b.run_to_abs_pos(660);
+            b.run_to_abs_pos(660);
         
         // 목 내리기
-        a.set_down(true);
-        a.set_speed_sp(get_speed());
-        a.run_to_abs_pos(?);    //값지정해주기
+            a.set_down(true);
+            a.set_speed_sp(get_speed());
+            a.run_to_abs_pos(?);    //값지정해주기
         
         // 집게 벌려서 내려놓기
         
         // 목 올리기
-        a.set_down(true);
-        a.set_speed_sp(get_speed());
-        a.run_to_abs_pos(neck_pos); 
+            a.set_down(true);
+            a.set_speed_sp(-1*get_speed());
+            a.run_to_abs_pos(neck_pos); 
         }
     
     
