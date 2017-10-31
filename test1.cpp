@@ -12,7 +12,7 @@ private:
     ev3dev::sound sound_q;
     ev3dev::motor a;
     ev3dev::motor b; 
-    ev3dev::dc_motor c;
+    ev3dev::motor c;
     
 public:
     // Hardware Configuration
@@ -169,14 +169,15 @@ void Crain::test_code()
             // set_right(true);
             // b.set_speed_sp(get_speed());
             // while(b.position() < /*v[i]*/ 500){
-            //     b.run_forever();
+            //      b.reset();
+            //      b.run_forever();
                 
             //     n = ultrasonic_q.distance_centimeters();  
                 
-            //     if(n < dis){                            // if 물체를 감지하면
-            //     v[i] = b.position_sp();
-            //     i++;
-            //     sound_q.speak("Ah", true);
+            //     if(n > ultrasonic_q.distance_centimeters()){                            // if 물체를 감지하면
+            //          v[i] = b.position_sp();
+            //          i++;
+            //          sound_q.speak("Ah", true);}
                 
             //     if(b.position() >= 500){             // End 위치까지 갔을 때
             //     if(i == 2){
@@ -188,16 +189,6 @@ void Crain::test_code()
             //     }  
             // }
                 
-                
-        //n = ultrasonic_q.distance_centimeters();  
-        
-        while(1){
-         if(7 > ultrasonic_q.distance_centimeters()){                            // if 물체를 감지하면
-                // v[i] = b.position_sp();
-                // i++;
-                sound_q.speak("Ha", true);}
-        }
-  
         
         //a.reset();    // 현재 neck 위치를 0으로
         
@@ -222,17 +213,19 @@ void Crain::test_code()
             // a.set_stop_action("hold");
             // a.stop();
         
-        // // 집게 벌려서 잡기
-            // c.set_polarity("normal");
-            // //c.set_command("duty_cycle_sp");
-            // while(c.duty_cycle() < 20)
-            //     c.run_forever();
-            // c.stop();
+        // 집게 벌려서 잡기
+            c.set_polarity("normal");
+            //c.set_command("duty_cycle_sp");
+            while(c.duty_cycle() < 20)
+                c.run_forever();
+            c.stop();
+            c.set_duty_cycle_sp(20);
+            c.run_direct()
             
-        // // set_duty_cycle_sp(int v) or set_time_sp(int v)
-        // // c.set_command("");       //time or duty cycle
-        // // c.set_polarity("normal or inversed");
-        // // b.set_stop_action("hold");
+        // set_duty_cycle_sp(int v) or set_time_sp(int v)
+        // c.set_command("");       //time or duty cycle
+        // c.set_polarity("normal or inversed");
+        // b.set_stop_action("hold");
         
         // // 목 올리기
         //     set_up(true);
