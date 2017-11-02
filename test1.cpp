@@ -58,7 +58,7 @@ public:
 
     virtual int  get_speed()
     {
-        return 100;
+        return 200;
     }
 
     virtual void set_down(bool val)
@@ -105,55 +105,55 @@ public:
     void close();
     void take_object(int n);
     void put_object();
-    // void example_code();
+    void example_code();
 };
 
 
-// void Crain::example_code()
-// { //This function is for example, you should develop your own logics
-//     while(get_escape() == false)
-//     {
-//         set_down(ev3dev::button::down.pressed());
-//         set_up(ev3dev::button::up.pressed());
-//         set_right(ev3dev::button::right.pressed());
-//         set_left(ev3dev::button::left.pressed());
-//         set_escape(ev3dev::button::back.pressed());
-//         set_enter(ev3dev::button::enter.pressed());
+void Crain::example_code()
+{ //This function is for example, you should develop your own logics
+    while(get_escape() == false)
+    {
+        set_down(ev3dev::button::down.pressed());
+        set_up(ev3dev::button::up.pressed());
+        set_right(ev3dev::button::right.pressed());
+        set_left(ev3dev::button::left.pressed());
+        set_escape(ev3dev::button::back.pressed());
+        set_enter(ev3dev::button::enter.pressed());
         
-//         if(get_up())
-//         {   
-//                 a.set_speed_sp(-1*get_speed());
-//                 a.run_forever();
-//         }   
-//         if(get_down())
-//         {
-//                 a.set_speed_sp(get_speed());
-//                 a.run_forever();
-//         }
-//         if(get_left())
-//         {
-//               b.set_speed_sp(get_speed());
-//               b.run_forever();
-//         }
-//         if(get_right())
-//         {
-//               b.set_speed_sp(-1* get_speed());
-//               b.run_forever();
-//         }
+        if(get_up())
+        {   
+                a.set_speed_sp(-1*get_speed());
+                a.run_forever();
+        }   
+        if(get_down())
+        {
+                a.set_speed_sp(get_speed());
+                a.run_forever();
+        }
+        if(get_left())
+        {
+              b.set_speed_sp(-1*get_speed());
+              b.run_forever();
+        }
+        if(get_right())
+        {
+              b.set_speed_sp(get_speed());
+              b.run_forever();
+        }
        
        
-//         if(!(get_up() | get_down() | get_right() | get_left() | get_enter()))
-//         {
-//             a.set_speed_sp(0);
-//             a.run_forever();
-//             b.set_speed_sp(0);
-//             b.run_forever();
-//         }
-//     }
+        if(!(get_up() | get_down() | get_right() | get_left() | get_enter()))
+        {
+            a.set_speed_sp(0);
+            a.run_forever();
+            b.set_speed_sp(0);
+            b.run_forever();
+        }
+    }
 
-//     a.stop();
-//     b.stop();
-// }
+    a.stop();
+    b.stop();
+}
    
 
 void Crain::move_right(int n)       //end 까지 550?
@@ -164,7 +164,7 @@ void Crain::move_right(int n)       //end 까지 550?
     //while(b.position_sp() < n ){
     while(b.position() < n ){
         b.run_forever();}
-    //b.set_stop_action("hold");
+    b.set_stop_action("hold");
     b.stop();
 }
 
@@ -173,56 +173,49 @@ void Crain::move_left(int n)
     //set_left(true);
     b.set_speed_sp(-1*get_speed());
             
-    while(b.position_sp() > n ){
+    while(b.position() > n ){
         b.run_forever();}
     //b.set_stop_action("hold");
     b.stop();
 }
 
-void Crain::move_down(int n)//100
+void Crain::move_down(int n)//180
 {
     //set_down(true);
     a.set_speed_sp(get_speed());
     while(a.position() < n){ 
         a.run_forever();}
-    //a.set_stop_action("hold");
+    a.set_stop_action("hold");
     a.stop();
 }
 
 void Crain::move_up(int n) //0
 {
-    //set_up(true);
     a.set_speed_sp(-1*get_speed());
-    while(a.position() > n){ 
-        a.run_forever();}
-    //a.set_stop_action("hold");
+    // while(a.position() > n){ 
+    //     a.run_forever();}
+    a.set_stop_action("hold");
+    a.set_position_sp(n);
+    a.run_to_abs_pos();
+   // a.set_stop_action("hold");
     a.stop();
 }
 
 void Crain::close()
 {
-    //c.set_polarity("normal");
     c.set_speed_sp(get_speed());      
     while(c.position() < 0) 
         c.run_forever();
-   // while(c.duty_cycle() < 20)
-   //     c.run_forever();
         
-    //c.set_stop_action("hold");       
+    c.set_stop_action("hold");       
     c.stop();
     
-     //c.set_duty_cycle_sp(20);
-    //c.run_direct()
-    
-    // set_duty_cycle_sp(int v) or set_time_sp(int v)
-    // c.set_command("");       //time or duty cycle
-    // c.set_polarity("normal or inversed");
 }
 
 void Crain::open()
 {
     c.set_speed_sp(-1*get_speed());
-    while(c.position() > -100)
+    while(c.position() > -50)
         c.run_forever();
     //c.set_stop_action("hold");
     c.stop();
@@ -235,7 +228,7 @@ void Crain::take_object(int n)          //n=0이면 open
     if(n==0)
         open();
     
-    move_down(100);
+    move_down(200);
     
     close();
     
@@ -246,7 +239,7 @@ void Crain::take_object(int n)          //n=0이면 open
 
 void Crain::put_object()
 {
-    move_down(100);
+    move_down(200);
     
     open();
     
@@ -287,16 +280,27 @@ void Crain::test_code()
 {
     float n;
     int v[3] = {100,230,400};
-    int i = 0;
+    //int i = 0;
+    
+    a.reset();
+    move_up(-400);
+    a.set_stop_action("hold");
+    a.stop();
+    a.reset();
+    b.reset();
+    
+    //move_up(-200);
+    
     
     // scan
     
-        // set_right(true);
+        
         // b.set_speed_sp(get_speed());
         
         // while(b.position() < /*v[i]*/ 500)
         // {
               //b.reset();
+              
         //      b.run_forever();
             
         //     n = ultrasonic_q.distance_centimeters();  
@@ -320,32 +324,28 @@ void Crain::test_code()
         //     }  
         // }
         
-        a.reset();    // 현재 neck 위치를 0으로
+        //a.reset();    // 현재 neck 위치를 0으로
         b.reset();
         c.reset();      // 닫혀 있는 집게의 위치를 0으로
         
-        move_right(150); 
-        take_object(0);
+        // move_right(550); 
+        // b.reset();
         
-        //for(int i = 2; i >= 0 ; i--)
-        //{
-            
-            //move_right(550);                    // End 위치로(test)
-            
-            
-            //move_left(-v[i]);                    // i 번째 위치로
+        for(int i = 2; i >= 0 ; i--)
+        {
+            move_left(-550+v[i]);                    // i 번째 위치로
 
             // if(i==0)                            // 물건 잡기
             //     take_object(0);                 
             // else
             //     take_object(1);
     
-            //move_right(550);                    // End 위치로
+            move_right(0);                    // End 위치로
     
             //put_object();                       // 물건 놓기
             
             //b.reset();
-        //}
+        }
         
         a.stop();
         b.stop();
