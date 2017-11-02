@@ -161,7 +161,8 @@ void Crain::move_right(int n)       //end 까지 550?
     //set_right(true);
     b.set_speed_sp(get_speed());
     
-    while(b.position_sp() < n ){
+    //while(b.position_sp() < n ){
+    while(b.position() < n ){
         b.run_forever();}
     //b.set_stop_action("hold");
     b.stop();
@@ -198,14 +199,16 @@ void Crain::move_up(int n) //0
     a.stop();
 }
 
-void Crain::open()
+void Crain::close()
 {
     //c.set_polarity("normal");
-    c.set_speed_sp(get_speed());        
-    while(c.duty_cycle() < 20)
+    c.set_speed_sp(get_speed());      
+    while(c.position() < 0) 
         c.run_forever();
+   // while(c.duty_cycle() < 20)
+   //     c.run_forever();
         
-    c.set_stop_action("hold");       
+    //c.set_stop_action("hold");       
     c.stop();
     
      //c.set_duty_cycle_sp(20);
@@ -216,12 +219,12 @@ void Crain::open()
     // c.set_polarity("normal or inversed");
 }
 
-void Crain::close()
+void Crain::open()
 {
     c.set_speed_sp(-1*get_speed());
-    while(c.duty_cycle() > 20)
+    while(c.position() > -100)
         c.run_forever();
-    c.set_stop_action("hold");
+    //c.set_stop_action("hold");
     c.stop();
     
 }
@@ -286,24 +289,24 @@ void Crain::test_code()
     int v[3] = {100,230,400};
     int i = 0;
     
-
     // scan
     
         // set_right(true);
         // b.set_speed_sp(get_speed());
+        
         // while(b.position() < /*v[i]*/ 500)
         // {
-              b.reset();
+              //b.reset();
         //      b.run_forever();
             
         //     n = ultrasonic_q.distance_centimeters();  
             
         //     if(n > ultrasonic_q.distance_centimeters()){                            // if 물체를 감지하면
+        //          sound_q.speak("Ah", true);
         //          v[i] = b.position_sp();
-        //          i++;
-        //          sound_q.speak("Ah", true);}
+        //          i++;}
             
-        //     if(b.position() >= 500)            // End 위치에 도달할 때까지
+        //     if(b.position() >= 550)            // End 위치에 도달할 때까지
         //      {
         //     if(i == 2){
         //      //b.set_stop_action(hold);
@@ -317,26 +320,32 @@ void Crain::test_code()
         //     }  
         // }
         
+        a.reset();    // 현재 neck 위치를 0으로
+        b.reset();
+        c.reset();      // 닫혀 있는 집게의 위치를 0으로
         
-        //a.reset();    // 현재 neck 위치를 0으로
+        move_right(150); 
+        take_object(0);
         
-        for(int i = 2; i >= 0 ; i--)
-        {
+        //for(int i = 2; i >= 0 ; i--)
+        //{
             
-            move_right(560);
+            //move_right(550);                    // End 위치로(test)
             
             
-            move_left(v[i]);                    // i 번째 위치로
+            //move_left(-v[i]);                    // i 번째 위치로
 
             // if(i==0)                            // 물건 잡기
             //     take_object(0);                 
             // else
             //     take_object(1);
     
-            //move_right(560);                    // End 위치로
+            //move_right(550);                    // End 위치로
     
             //put_object();                       // 물건 놓기
-        }
+            
+            //b.reset();
+        //}
         
         a.stop();
         b.stop();
@@ -353,7 +362,6 @@ int main()
             Crain crain;
             crain.test_code();
     
-        
     //}
     
 }
