@@ -1,6 +1,6 @@
 #include "ev3dev.h"
 #include "h_crane.h"
-
+#include <stdlib.h>
 
 
 class Crain : public CraneCrane
@@ -96,7 +96,6 @@ public:
         m_speed = val;    
     }
     
-public:
     void test_code();
     void move_right(int n);
     void move_left(int n);
@@ -107,12 +106,13 @@ public:
     void take_object(int n);
     void put_object();
     void example_code();
+
 };
 
 
 void Crain::example_code()
 { //This function is for example, you should develop your own logics
-    while(get_escape() == false)
+    while(get_touch_pressed() == false)
     {
         set_down(ev3dev::button::down.pressed());
         set_up(ev3dev::button::up.pressed());
@@ -141,8 +141,19 @@ void Crain::example_code()
               b.set_speed_sp(get_speed());
               b.run_forever();
         }
+        
+        if(get_escape())
+        {
+            c.set_speed_sp(20);
+            c.run_forever();
+        }
        
-       
+        if(get_enter())
+        {
+            c.set_speed_sp(-20);
+            c.run_forever();
+        }
+
         if(!(get_up() | get_down() | get_right() | get_left() | get_enter()))
         {
             a.set_speed_sp(0);
@@ -156,38 +167,61 @@ void Crain::example_code()
     b.stop();
 }
 
-void Crain::move_right(int n)       //end 까지 570
+void Crain::move_right(int n)       //end 까지 550
 {
-    //set_right(true);
     b.set_speed_sp(get_speed());
     
-    //while(b.position_sp() < n ){
-    while(b.position() < n ){
-        b.run_forever();}
+    for(int i = 10; i < n; i+=10){
+        b.set_position_sp(i);
+        b.run_to_abs_pos();
+    }
     
-    b.set_stop_action("hold");
-    b.stop();
+    sleep(0.5);
+    
+    // while(b.position() < n ){
+    //     b.run_forever();}
+    
+    // b.set_stop_action("hold");
+    // b.stop();
 }
 
 void Crain::move_left(int n)
 {
-    b.set_speed_sp(-1*get_speed());
+    b.set_speed_sp(get_speed());
+    
+    for(int i = 10; i < n; i+=10){
+        b.set_position_sp(-i);
+        b.run_to_abs_pos();
+    }
+    
+    sleep(0.5);
+    
+    // b.set_speed_sp(-1*get_speed());
             
-    while(b.position() > n ){
-        b.run_forever();}
-    //b.set_stop_action("hold");
-    b.stop();
+    // while(b.position() > n ){
+    //     b.run_forever();}
+    // //b.set_stop_action("hold");
+    // b.stop();
 }
 
 void Crain::move_down(int n)//180
 {
-
+    a.reset();
     // a.set_position_sp(n);
     // a.set_speed_sp(get_speed());
     // a.run_to_abs_pos();
     
+    // a.set_speed_sp(get_speed());
+    
+    // for(int i = 10; i < n; i+=10){
+    //     a.set_position_sp(i);
+    //     a.run_to_abs_pos();
+    // }
+    
+    // sleep(0.5);
     
     a.set_speed_sp(get_speed());
+    
     while(a.position() < n){ 
         a.run_forever();}
     a.set_stop_action("hold");
@@ -196,6 +230,16 @@ void Crain::move_down(int n)//180
 
 void Crain::move_up(int n) //0
 {
+   // a.reset();
+   // a.set_speed_sp(get_speed());
+    
+    // for(int i = n; i > 0; i-=10){
+    //     a.set_position_sp(-i);
+    //     a.run_to_abs_pos();
+    // }
+    
+    // sleep(0.5);
+    
     // a.set_position(0);
     // a.set_position_sp(n);
     a.set_speed_sp(-1*get_speed());
@@ -203,27 +247,50 @@ void Crain::move_up(int n) //0
     
     while(a.position() > n){ 
         a.run_forever();}
-    a.set_stop_action("hold");
+    //a.set_stop_action("hold");
     a.stop();
     
 }
 
 void Crain::close()
 {
+    //c.reset();
+    
+    // c.set_speed_sp(get_speed());
+    
+    // for(int i = 80; i > 0; i-=10){
+    //     c.set_position_sp(-i);
+    //     c.run_to_abs_pos();
+    // }
+    
+    // sleep(0.5);
+    
     c.set_speed_sp(get_speed());      
     while(c.position() < 0) 
         c.run_forever();
         
-    c.set_stop_action("hold");       
+    //c.set_stop_action("hold");       
     c.stop();
     
 }
 
 void Crain::open()
 {
-    c.set_speed_sp(-1*get_speed());
-    while(c.position() > -50)
+    // c.reset();
+    
+    // c.set_speed_sp(get_speed());
+    
+    // for(int i = 10; i < 80; i+=10){
+    //     c.set_position_sp(-i);
+    //     c.run_to_abs_pos();
+    // }
+    
+    // sleep(0.5);
+    
+    c.set_speed_sp(get_speed());
+    while(c.position() > -70)
         c.run_forever();
+        
     //c.set_stop_action("hold");
     c.stop();
     
@@ -239,18 +306,17 @@ void Crain::take_object(int n)          //n=0이면 open
     sleep(0.5);
     close();
     sleep(0.5);
-    move_up(0);
+    move_up(350);
 }
-
 
 
 void Crain::put_object()
 {
     move_down(350);
-    
+    sleep(0.5);
     open();
-    
-    move_up(0);
+    sleep(0.5);
+    move_up(350);
 }
 
 
@@ -294,85 +360,106 @@ void Crain::test_code()
     
     a.reset();
     b.reset();
+    c.reset();
     
+    
+    open();
+    
+    move_down(200);
+    
+    close();
+    
+    move_up(0);
+    
+    //take_object(0);
+    
+    // sleep(1);
+    // close();
     
     // // scan
-    b.set_speed_sp(get_speed());
-    b.set_position_sp(0);
-    b.run_to_abs_pos();
+    // b.set_speed_sp(get_speed());
+    // b.set_position_sp(0);
+    // b.run_to_abs_pos();
     
-    while(1)
-    {    
-        while(b.position() < 570 ){
-            
-            b.run_forever();
+    // while(1)
+    // {   
+        // b.reset(); 
+        // b.set_speed_sp(get_speed());
+        // b.set_position_sp(0);
+        // b.run_to_abs_pos();
+        
+        
+        //while(b.position() < 550){
+        
+         
+        //}
+            //b.run_forever();
     
             //std::cout << "The value is: " << ultrasonic_q.distance_centimeters() << std::endl;  
             
-            
-            if(ultrasonic_q.distance_centimeters() > 30 )
-                dis = 30;
+    //         if(ultrasonic_q.distance_centimeters() > 30 )
+    //             dis = 30;
                 
-            else
-                dis = ultrasonic_q.distance_centimeters();
+    //         else
+    //             dis = ultrasonic_q.distance_centimeters();
                 
                 
-            std::cout << "The value is: " << dis << std::endl;      
+    //         std::cout << "The value is: " << dis << std::endl;      
             
             
-            if( -10 > dis - n ){                            // if 물체를 감지하면
-                sound_q.speak("Ah", true);
-                v[i] = b.position();
-                std::cout << "The sensed value is: " << v[i] << std::endl;
-                i++;}
+    //         if( -10 > dis - n ){                            // if 물체를 감지하면
+    //             sound_q.speak("Ah", true);
+    //             v[i] = b.position();
+    //             std::cout << "The sensed value is: " << v[i] << std::endl;
+    //             i++;}
             
-             n = dis;
-        }
+    //          n = dis;
+         //}
     
-        b.set_stop_action("hold");
-        b.stop(); 
+    //     b.set_stop_action("hold");
+    //     b.stop(); 
     
-        if(i == 3)
-            break;
+    //     if(i == 3)
+    //         break;
             
-        // if( i != 3){
-        //     i = 0;
-        //     move_left(0);}
+    //     // if( i != 3){
+    //     //     i = 0;
+    //     //     move_left(0);}
+    //     else{   
+    //         i = 0;
+    //         b.reset();
+    //         move_left(-550);}          // 시작 위치로
+        
+    // }
+    
+    
+        
+        
+    //     a.reset();    // 현재 neck 위치를 0으로
+    //     b.reset();
+    //     c.reset();      // 닫혀 있는 집게의 위치를 0으로
+        
+    //     //move_right(550); 
+    //     //b.reset();
+        
+    //     for(int i = 2; i >= 0 ; i--)
+    //     {
+    //         move_left(-550+v[i]);               // i 번째 위치로
 
-        else{   
-            i = 0;
-            move_left(0);}          // 시작 위치로
-        
-    }
+    //         if(i==2)                            // 물건 잡기
+    //             take_object(0);                 
+    //         else
+    //             take_object(1);
     
+    //         move_right(0);                      // End 위치로
     
-        
-        
-        a.reset();    // 현재 neck 위치를 0으로
-        b.reset();
-        c.reset();      // 닫혀 있는 집게의 위치를 0으로
-        
-        //move_right(550); 
-        //b.reset();
-        
-        for(int i = 2; i >= 0 ; i--)
-        {
-            move_left(-570+v[i]);                    // i 번째 위치로
-
-            if(i==2)                            // 물건 잡기
-                take_object(0);                 
-            else
-                take_object(1);
-    
-            move_right(0);                    // End 위치로
-    
-            put_object();                       // 물건 놓기
+    //         put_object();                       // 물건 놓기
             
-            b.reset();
-        }
+    //         b.reset();
+    //     }
         
-    a.stop();
-    b.stop();
+    // a.stop();
+    // b.stop();
 
 }
 
