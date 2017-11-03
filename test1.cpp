@@ -171,7 +171,7 @@ void Crain::move_right(int n)       //end 까지 550
 {
     b.set_speed_sp(get_speed());
     
-    for(int i = 10; i < n; i+=10){
+    for(int i = 10; i <= n; i+=10){
         b.set_position_sp(i);
         b.run_to_abs_pos();
     }
@@ -189,7 +189,7 @@ void Crain::move_left(int n)
 {
     b.set_speed_sp(get_speed());
     
-    for(int i = 10; i < n; i+=10){
+    for(int i = 10; i <= n; i+=10){
         b.set_position_sp(-i);
         b.run_to_abs_pos();
     }
@@ -312,36 +312,6 @@ void Crain::put_object()
     move_up(0);
 }
 
-
-// crain.move_neck(200, 0);
-     
-//         crain.move_hand(200, 0);
-  
-//         crain.move_neck(200, 1);
-  
-//         for(int i = 0; i < 600; i+=10)
-//         {
-//         crain.move_foot(-1*i, 0);
-//         }
-  
-//         crain.move_hand(100, 1);
-
-
-// void Crain::move_neck(int pos, int flag)
-// {
-//     if (flag == 1)
-//     {
-//         pos *= -1;
-//     }
-//     b.set_position(0);
-//     b.set_position_sp(pos);
-//     b.set_speed_sp(get_speed());
-//     b.run_to_abs_pos();
-// }
-
-
-
-
 /*sensor thresholding!!!!!!*/
 
 
@@ -349,86 +319,100 @@ void Crain::test_code()
 {
     float dis, n = 0;
     int v[100];
-    int i = 0;
+    int pos, index = 0;
     
     a.reset();
     b.reset();
     
-    
-    // // scan
-    // b.set_speed_sp(get_speed());
-    // b.set_position_sp(0);
-    // b.run_to_abs_pos();
-    
-    // while(1)
-    // {   
-        // b.reset(); 
-        // b.set_speed_sp(get_speed());
-        // b.set_position_sp(0);
-        // b.run_to_abs_pos();
-        
-        
-        //while(b.position() < 550){
-        
-         
-        //}
-            //b.run_forever();
-    
-            //std::cout << "The value is: " << ultrasonic_q.distance_centimeters() << std::endl;  
+    // scan
+    //while(1)
+    //{   
+        b.reset(); 
+        b.set_speed_sp(80);
+
+        for(int i = 20; i < 550; i+=20){
             
-    //         if(ultrasonic_q.distance_centimeters() > 30 )
-    //             dis = 30;
+            //b.set_speed_sp(80);
+            b.set_position_sp(i);
+            b.run_to_abs_pos();
+            sleep(0.5);
+            
+            std::cout << "The value is: " << ultrasonic_q.distance_centimeters() << std::endl;  
+            
+            if(ultrasonic_q.distance_centimeters() > 30 )
+                dis = 30;
                 
-    //         else
-    //             dis = ultrasonic_q.distance_centimeters();
+            else
+                dis = ultrasonic_q.distance_centimeters();
+
+            //std::cout << "The value is: " << dis << std::endl;      
+            
+            if( -10 > dis - n ){                            // if 물체를 감지하면
+                //sound_q.speak("ho", true);
+                v[index] = pos;
+                std::cout << "The sensed value is: " << v[i] << std::endl;
+                index++;}
                 
-                
-    //         std::cout << "The value is: " << dis << std::endl;      
-            
-            
-    //         if( -10 > dis - n ){                            // if 물체를 감지하면
-    //             sound_q.speak("Ah", true);
-    //             v[i] = b.position();
-    //             std::cout << "The sensed value is: " << v[i] << std::endl;
-    //             i++;}
-            
-    //          n = dis;
-         //}
-    
-    //     b.set_stop_action("hold");
-    //     b.stop(); 
-    
-    //     if(i == 3)
-    //         break;
-            
-    //     // if( i != 3){
-    //     //     i = 0;
-    //     //     move_left(0);}
-    //     else{   
-    //         i = 0;
-    //         b.reset();
-    //         move_left(-550);}          // 시작 위치로
+            pos = b.position();
+            n = dis;
+        }
         
-    // }
+        // while(b.position() < 550){
+        
+        //     b.run_forever();
+        
+        //     std::cout << "The value is: " << ultrasonic_q.distance_centimeters() << std::endl;  
+            
+        //     if(ultrasonic_q.distance_centimeters() > 30 )
+        //         dis = 30;
+                
+        //     else
+        //         dis = ultrasonic_q.distance_centimeters();
+
+        //     std::cout << "The value is: " << dis << std::endl;      
+            
+            
+        //     if( -10 > dis - n ){                            // if 물체를 감지하면
+        //         sound_q.speak("Ah", true);
+        //         v[index] = b.position();
+        //         std::cout << "The sensed value is: " << v[index] << std::endl;
+        //         index++;}
+            
+        //      n = dis;
+        //  }
+    
+    
+        //b.set_stop_action("hold");
+        //b.stop(); 
+    
+        // if(index == 2)
+        //     break;
+            
+        // // if( i != 3){
+        // //     i = 0;
+        // //     move_left(0);}
+        
+        // else{   
+        //     index = 0;
+        //     b.reset();
+        //     move_left(550);                 // 시작 위치로
+        // }                               
+    //}
     
     
         
         
     //     a.reset();    // 현재 neck 위치를 0으로
     //     b.reset();
-    //     c.reset();      // 닫혀 있는 집게의 위치를 0으로
         
     //     //move_right(550); 
     //     //b.reset();
         
     //     for(int i = 2; i >= 0 ; i--)
     //     {
-    //         move_left(-550+v[i]);               // i 번째 위치로
+    //         move_left(550-v[i]);               // i 번째 위치로
 
-    //         if(i==2)                            // 물건 잡기
-    //             take_object(0);                 
-    //         else
-    //             take_object(1);
+    //         take_object();                     //  물건 잡기            
     
     //         move_right(0);                      // End 위치로
     
@@ -437,8 +421,8 @@ void Crain::test_code()
     //         b.reset();
     //     }
         
-    // a.stop();
-    // b.stop();
+    a.stop();
+    b.stop();
 
 }
 
@@ -446,17 +430,17 @@ void Crain::test_code()
 
 int main()
 {     
-    Crain crain;
+    //Crain crain;
     
     // if(crain.get_touch_pressed()==true)
     // {
-            //Crain* crain = new Crain;
+            Crain* crain = new Crain;
             
-            crain.example_code();
-            crain.test_code();
+            crain->example_code();
+            crain->test_code();
             
           // crain->test_code();
-            //delete crain;
+            delete crain;
     //}
     
 }
