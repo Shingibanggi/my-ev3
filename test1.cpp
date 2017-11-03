@@ -103,7 +103,7 @@ public:
     void move_up(int n);
     void open();
     void close();
-    void take_object(int n);
+    void take_object();
     void put_object();
     void example_code();
 
@@ -206,7 +206,7 @@ void Crain::move_left(int n)
 
 void Crain::move_down(int n)//180
 {
-    a.reset();
+    //a.reset();
     // a.set_position_sp(n);
     // a.set_speed_sp(get_speed());
     // a.run_to_abs_pos();
@@ -220,7 +220,7 @@ void Crain::move_down(int n)//180
     
     // sleep(0.5);
     
-    a.set_speed_sp(get_speed());
+    a.set_speed_sp(500);
     
     while(a.position() < n){ 
         a.run_forever();}
@@ -242,7 +242,7 @@ void Crain::move_up(int n) //0
     
     // a.set_position(0);
     // a.set_position_sp(n);
-    a.set_speed_sp(-1*get_speed());
+    a.set_speed_sp(-1*350);
     // a.run_to_abs_pos();
     
     while(a.position() > n){ 
@@ -254,59 +254,52 @@ void Crain::move_up(int n) //0
 
 void Crain::close()
 {
-    //c.reset();
-    
-    // c.set_speed_sp(get_speed());
-    
-    // for(int i = 80; i > 0; i-=10){
-    //     c.set_position_sp(-i);
-    //     c.run_to_abs_pos();
-    // }
-    
-    // sleep(0.5);
-    
-    c.set_speed_sp(get_speed());      
-    while(c.position() < 0) 
-        c.run_forever();
-        
-    //c.set_stop_action("hold");       
-    c.stop();
-    
-}
-
-void Crain::open()
-{
-    // c.reset();
-    
-    // c.set_speed_sp(get_speed());
-    
-    // for(int i = 10; i < 80; i+=10){
-    //     c.set_position_sp(-i);
-    //     c.run_to_abs_pos();
-    // }
-    
-    // sleep(0.5);
     
     c.set_speed_sp(get_speed());
-    while(c.position() > -70)
-        c.run_forever();
+    
+    for(int i = 0; i <= 90; i+=10){
+        c.set_position_sp(i);
+        c.run_to_abs_pos();
+    }
+    
+    sleep(0.5);
+    
+    // c.set_speed_sp(get_speed());      
+    // while(c.position() < 0) 
+    //     c.run_forever();
         
-    //c.set_stop_action("hold");
-    c.stop();
+    // //c.set_stop_action("hold");       
+    // c.stop();
+    
+}
+
+void Crain::open()          //-80
+{
+    //c.reset();
+    
+    c.set_speed_sp(get_speed());
+    
+    c.set_position_sp(0);
+    c.run_to_abs_pos();
+    
+    // for(int i = 10; i <= 90; i+=10){
+    //     c.set_position_sp(-i);
+    //     c.run_to_abs_pos();
+    // }
+    
+    sleep(0.5);
     
 }
 
 
-void Crain::take_object(int n)          //n=0이면 open
-{
-    if(n==0)
-        open();
-    
+void Crain::take_object()         //n=0이면 open
+{   
+    c.reset();
     move_down(350);
     sleep(0.5);
     close();
     sleep(0.5);
-    move_up(350);
+    move_up(0);
 }
 
 
@@ -316,7 +309,7 @@ void Crain::put_object()
     sleep(0.5);
     open();
     sleep(0.5);
-    move_up(350);
+    move_up(0);
 }
 
 
@@ -360,21 +353,7 @@ void Crain::test_code()
     
     a.reset();
     b.reset();
-    c.reset();
     
-    
-    open();
-    
-    move_down(200);
-    
-    close();
-    
-    move_up(0);
-    
-    //take_object(0);
-    
-    // sleep(1);
-    // close();
     
     // // scan
     // b.set_speed_sp(get_speed());
