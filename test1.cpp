@@ -59,7 +59,7 @@ public:
 
     virtual int  get_speed()
     {
-        return 700;
+        return 200;
     }
 
     virtual void set_down(bool val)
@@ -156,7 +156,7 @@ void Crain::example_code()
     b.stop();
 }
 
-void Crain::move_right(int n)       //end 까지 550?
+void Crain::move_right(int n)       //end 까지 570
 {
     //set_right(true);
     b.set_speed_sp(get_speed());
@@ -164,13 +164,13 @@ void Crain::move_right(int n)       //end 까지 550?
     //while(b.position_sp() < n ){
     while(b.position() < n ){
         b.run_forever();}
+    
     b.set_stop_action("hold");
     b.stop();
 }
 
 void Crain::move_left(int n)
 {
-    //set_left(true);
     b.set_speed_sp(-1*get_speed());
             
     while(b.position() > n ){
@@ -236,9 +236,9 @@ void Crain::take_object(int n)          //n=0이면 open
         open();
     
     move_down(350);
-    
+    sleep(0.5);
     close();
-    
+    sleep(0.5);
     move_up(0);
 }
 
@@ -283,85 +283,96 @@ void Crain::put_object()
 
 
 
+/*sensor thresholding!!!!!!*/
+
+
 void Crain::test_code()
 {
-    float n;
-    int v[3] = {100,230,400};
-    //int i = 0;
+    float dis, n = 0;
+    int v[100];
+    int i = 0;
     
-    //a.reset();
-    // move_up(-300);
-    // sleep(0.5);
-    // a.set_;stop_action("hold");
-    // a.stop();
     a.reset();
     b.reset();
     
-    move_down(250);
-    sleep(0.5);
-    move_right(550);
-    sleep(0.5);
-    move_up(-250);
-    //move_up(300);
     
+    // // scan
+    b.set_speed_sp(get_speed());
+    b.set_position_sp(0);
+    b.run_to_abs_pos();
     
-    // scan
+    while(1)
+    {    
+        while(b.position() < 570 ){
+            
+            b.run_forever();
     
-        
-        // b.set_speed_sp(get_speed());
-        
-        // while(b.position() < /*v[i]*/ 500)
-        // {
-        //       b.reset();
-              
-        //      b.run_forever();
+            //std::cout << "The value is: " << ultrasonic_q.distance_centimeters() << std::endl;  
             
-        //     n = ultrasonic_q.distance_centimeters();  
             
-        //     if(20 > ultrasonic_q.distance_centimeters()){                            // if 물체를 감지하면
-        //          sound_q.speak("Ah", true);
-        //          v[i] = b.position_sp();
-        //          i++;}
+            if(ultrasonic_q.distance_centimeters() > 30 )
+                dis = 30;
+                
+            else
+                dis = ultrasonic_q.distance_centimeters();
+                
+                
+            std::cout << "The value is: " << dis << std::endl;      
             
-        //     if(b.position() >= 550)            // End 위치에 도달할 때까지
-        //      {
-        //     if(i == 2){
-        //      //b.set_stop_action(hold);
-        //         b.stop;
-        //         break;
-        //      }
             
-        //     else{   
-        //         i = 0;
-        //         b.run_to_abs_pos(0);}          // 시작 위치로
-        //     }  
-        // }
-        
-        //a.reset();    // 현재 neck 위치를 0으로
-        // b.reset();
-        // c.reset();      // 닫혀 있는 집게의 위치를 0으로
-        
-        // move_right(550); 
-        // b.reset();
-        
-        // for(int i = 2; i >= 0 ; i--)
-        // {
-        //     move_left(-550+v[i]);                    // i 번째 위치로
+            if( -10 > dis - n ){                            // if 물체를 감지하면
+                sound_q.speak("Ah", true);
+                v[i] = b.position();
+                std::cout << "The sensed value is: " << v[i] << std::endl;
+                i++;}
+            
+             n = dis;
+        }
+    
+        b.set_stop_action("hold");
+        b.stop(); 
+    
+        if(i == 3)
+            break;
+            
+        // if( i != 3){
+        //     i = 0;
+        //     move_left(0);}
 
-        //     // if(i==0)                            // 물건 잡기
-        //     //     take_object(0);                 
-        //     // else
-        //     //     take_object(1);
-    
-        //     move_right(0);                    // End 위치로
-    
-        //     //put_object();                       // 물건 놓기
-            
-        //     //b.reset();
-        // }
+        else{   
+            i = 0;
+            move_left(0);}          // 시작 위치로
         
-        a.stop();
-        b.stop();
+    }
+    
+    
+        
+        
+        a.reset();    // 현재 neck 위치를 0으로
+        b.reset();
+        c.reset();      // 닫혀 있는 집게의 위치를 0으로
+        
+        //move_right(550); 
+        //b.reset();
+        
+        for(int i = 2; i >= 0 ; i--)
+        {
+            move_left(-570+v[i]);                    // i 번째 위치로
+
+            if(i==2)                            // 물건 잡기
+                take_object(0);                 
+            else
+                take_object(1);
+    
+            move_right(0);                    // End 위치로
+    
+            put_object();                       // 물건 놓기
+            
+            b.reset();
+        }
+        
+    a.stop();
+    b.stop();
 
 }
 
@@ -371,12 +382,15 @@ int main()
 {     
     Crain crain;
     
-    if(crain.get_touch_pressed()==true)
-    {
+    // if(crain.get_touch_pressed()==true)
+    // {
             //Crain* crain = new Crain;
+            
+            crain.example_code();
             crain.test_code();
+            
           // crain->test_code();
             //delete crain;
-    }
+    //}
     
 }
